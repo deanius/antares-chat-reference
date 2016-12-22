@@ -1,0 +1,7 @@
+node_modules
+npm-debug.log
+deps.svg
+
+config/settings_production.json
+
+.DS_Store
