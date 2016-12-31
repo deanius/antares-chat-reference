@@ -1,0 +1,10 @@
+/* styles from https://codepen.io/thatdevguy/pen/HbKCf */
+.messages {
+  flex: 1;
+  overflow: auto;
+}
+
+.msg-theirs {
+    margin-left: 50px;
+    justify-content: flex-end;
+}
