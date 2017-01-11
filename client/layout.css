@@ -1,9 +1,34 @@
 /* styles from https://codepen.io/thatdevguy/pen/HbKCf */
 
+.sm {
+  font-size: 70%;
+}
+
 .messages {
   overflow: auto;
+  magin-top: 10px;
+}
+
+.inProgressMessage { 
+  clear: both;
+  margin-top: 10px;
+}
+
+.msg {
+  clear: both;
+   border-radius: 5px;
+   border: 1px solid gray;
+   max-width: 200px;
+   padding: 3px;
+}
+
+.msg-theirs {
+  float: left;
+  background-color: #ddd;
 }
 
 .msg-mine {
+   float: right;
    text-align: right;
+   background-color: #aaf;
 }
