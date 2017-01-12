@@ -41,10 +41,6 @@ export const Actions = {
     },
 }
 
-export const MetaEnhancers = [
-    () => ({ key: ['Chats', 'chat:demo'] })
-]
-
 const sendersReducer = createReducer({
     'Senders.changeSides': (state) => {
         let otherID = state.get('otherID')
@@ -63,9 +59,8 @@ const activityReducer = createReducer({
     'Activity.notifyOfTyping': (state, { active, sender }) => {
         if (active) {
             return state.setIn(['activeSenders', sender], active)
-        } else {
-            return state.deleteIn(['activeSenders', sender])
         }
+        return state.deleteIn(['activeSenders', sender])
     }
 }, fromJS({ activeSenders: {} }))
 
@@ -77,15 +72,13 @@ export const Reducers = {
     })
 }
 
-export const ReducerForKey = () => Reducers.Conversation
-
 export const ViewReducer = createReducer({
     'View.changeSides': view => ({ senderId: (view.senderId === 'Self' ? 'Other' : 'Self') })
 }, { senderId: 'Self' })
 
 export const Epics = {
-    notifyOfTyping: (action$) => {
-        return action$
+    notifyOfTyping: action$ =>
+        action$
             .ofType('Activity.type')
             .throttleTime(2000)
             .map(a => ({
@@ -94,10 +87,10 @@ export const Epics = {
                     active: true,
                     sender: a.payload.sender
                 }
-            }))
-    },
-    removeTypingNotification: (action$) => {
-        return action$
+            })),
+
+    removeTypingNotification: action$ =>
+        action$
             .ofType('Activity.notifyOfTyping')
             .filter(a => a.payload.active === true)
             .switchMap(typingOnAction =>
@@ -109,8 +102,12 @@ export const Epics = {
                     payload: {
                         active: false,
                         sender: typingOnAction.payload.sender
-                    }
-                }))
-            )
-    }
+                    } })))
 }
+
+export const MetaEnhancers = [
+    () => ({ key: ['Chats', 'chat:demo'] })
+]
+
+export const ReducerForKey = () => Reducers.Conversation
+
