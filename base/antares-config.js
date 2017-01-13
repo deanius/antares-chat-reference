@@ -6,7 +6,7 @@ import { createConsequence } from 'meteor/deanius:antares'
 
 export const Actions = {
     Conversation: {
-        start: (participants) => ({
+        start: participants => ({
             type: 'Antares.storeAtKey',
             payload: { senders: participants }
         })
@@ -91,18 +91,24 @@ export const Epics = {
 
     removeTypingNotification: action$ =>
         action$
+            // Selected actions
             .ofType('Activity.notifyOfTyping')
             .filter(a => a.payload.active === true)
+            // become Observables which cancel any previous
             .switchMap(typingOnAction =>
+                // and which consist of the first of these to complete
                 Rx.Observable.race(
                     Rx.Observable.timer(2500),
                     action$.ofType('Message.send')
-                ).map(() => createConsequence(typingOnAction, {
+                )
+                // .. returned as a notifyOfTyping({active: false}) action
+                .map(() => ({
                     type: 'Activity.notifyOfTyping',
                     payload: {
                         active: false,
                         sender: typingOnAction.payload.sender
-                    } })))
+                    }
+                })))
 }
 
 export const MetaEnhancers = [
