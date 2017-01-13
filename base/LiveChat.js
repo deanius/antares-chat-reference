@@ -87,7 +87,7 @@ class _LiveChat extends React.Component {
                 <div className="messages">
                     {messages.map(msg => (
                         <div
-                          key={Math.floor(Math.random() * 1000)}
+                          key={Math.floor(Math.random() * 10000)}
                           className={'msg msg-' + (msg.sentByMe ? 'mine' : 'theirs')}
                         >{msg.message}</div>
                     ))}
