@@ -66,18 +66,20 @@ class _LiveChat extends React.Component {
                 <h2>ANTARES chat</h2>
                 <div className="sm">
                     <a
-                        href="#start-conversation" onClick={() => {
-                            Antares.announce(Actions.Conversation.start, ['Self', 'Other'])
-                            Antares.announce(Actions.Message.send, { message: 'Hello!', sender: 'Self' })
-                            Antares.announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
-                            return false
-                        } }
-                        >Start conversation</a>
+                      href="#start-conversation" onClick={(e) => {
+                          Antares.announce(Actions.Conversation.start, ['Self', 'Other'])
+                          Antares.announce(Actions.Message.send, { message: 'Hello!', sender: 'Self' })
+                          Antares.announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
+                          e.preventDefault()
+                      }}
+                    >Start conversation</a>
                     &nbsp;
                     <a
-                        href="#change-sides"
-                        onClick={() => Antares.announce(Actions.View.changeSides) && false}
-                        >See Other&apos;s View</a>
+                      href="#change-sides"
+                      onClick={(e) => {
+                          Antares.announce(Actions.View.changeSides) && e.preventDefault()
+                      }}
+                    >See Other&apos;s View</a>
                     &nbsp;
                     (viewing as {senderId})
                 </div>
@@ -85,9 +87,9 @@ class _LiveChat extends React.Component {
                 <div className="messages">
                     {messages.map(msg => (
                         <div
-                            key={Math.floor(Math.random() * 1000)}
-                            className={'msg msg-' + (msg.sentByMe ? 'mine' : 'theirs')}
-                            >{msg.message}</div>
+                          key={Math.floor(Math.random() * 1000)}
+                          className={'msg msg-' + (msg.sentByMe ? 'mine' : 'theirs')}
+                        >{msg.message}</div>
                     ))}
                 </div>
 
@@ -102,11 +104,11 @@ class _LiveChat extends React.Component {
 
                 <div className="inProgressMessage">
                     <textarea
-                        rows="2" cols="50"
-                        value={this.state.inProgressMessage}
-                        onChange={this.handleTyping}
-                        onKeyPress={this.handleKeyPress}
-                        />
+                      rows="2" cols="50"
+                      value={this.state.inProgressMessage}
+                      onChange={this.handleTyping}
+                      onKeyPress={this.handleKeyPress}
+                    />
                     <br />
                     <button onClick={this.handleSend}>SEND</button>
                 </div>
