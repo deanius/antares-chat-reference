@@ -72,7 +72,9 @@ export const Reducers = {
 }
 
 export const ViewReducer = combineReducers({
-    senderId: senderId => (senderId === 'Self' ? 'Other' : 'Self'),
+    senderId: createReducer({
+        'View.changeSides': senderId => (senderId === 'Self' ? 'Other' : 'Self')
+    }, 'Self'),
     activity: activityReducer
 })
 
