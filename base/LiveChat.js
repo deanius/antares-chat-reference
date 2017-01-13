@@ -16,12 +16,12 @@ const markMyMessages = senderId =>
 // The component props combine both antares data (shared for all clients)
 // and view data, particular to each client
 const selectState = (state) => {
-    const viewData = state.view
+    const currentSender = state.view.get('senderId')
     const iChatRoot = (state.antares.getIn(['Chats', 'chat:demo']) || new Map())
     return iChatRoot
         // modify the messages to have a flag
-        .update('messages', markMyMessages(viewData.senderId))
-        .set('senderId', viewData.senderId)
+        .update('messages', markMyMessages(currentSender))
+        .set('senderId', currentSender)
         .toJS()
 }
 

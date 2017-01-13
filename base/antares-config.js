@@ -68,13 +68,13 @@ export const Reducers = {
     Conversation: combineReducers({
         senders: sendersReducer,
         messages: messageReducer,
-        activity: activityReducer
     })
 }
 
-export const ViewReducer = createReducer({
-    'View.changeSides': view => ({ senderId: (view.senderId === 'Self' ? 'Other' : 'Self') })
-}, { senderId: 'Self' })
+export const ViewReducer = combineReducers({
+    senderId: senderId => (senderId === 'Self' ? 'Other' : 'Self'),
+    activity: activityReducer
+})
 
 export const Epics = {
     notifyOfTyping: action$ =>
