@@ -16,12 +16,15 @@ const markMyMessages = senderId =>
 // The component props combine both antares data (shared for all clients)
 // and view data, particular to each client
 const selectState = (state) => {
+    const persistedChatData = (state.antares.getIn(['Chats', 'chat:demo']) || new Map())
     const currentSender = state.view.get('senderId')
-    const iChatRoot = (state.antares.getIn(['Chats', 'chat:demo']) || new Map())
-    return iChatRoot
-        // modify the messages to have a flag
+    return persistedChatData
+        // slightly dirty - modify the messages to have a flag
         .update('messages', markMyMessages(currentSender))
-        .set('senderId', currentSender)
+        .merge({
+            senderId: currentSender,
+            activeSenders: state.view.getIn(['activity', 'activeSenders'])
+        })
         .toJS()
 }
 
@@ -60,7 +63,7 @@ class _LiveChat extends React.Component {
     }
 
     render() {
-        let { senderId, messages = [], activity } = this.props
+        let { senderId, messages = [], activeSenders } = this.props
         return (
             <div>
                 <h2>ANTARES chat</h2>
@@ -96,9 +99,9 @@ class _LiveChat extends React.Component {
                 {
                     // a compound expression evaluating to the typing indicator
                     // if all the conditions are met
-                    activity &&
-                    Object.keys(activity.activeSenders).length > 0 &&
-                    !activity.activeSenders[senderId] &&
+                    activeSenders &&
+                    Object.keys(activeSenders).length > 0 &&
+                    !activeSenders[senderId] &&
                     <div className="msg msg-theirs"><i>. . .</i></div>
                 }
 

@@ -97,18 +97,18 @@ export const Epics = {
             .ofType('Activity.notifyOfTyping')
             .filter(a => a.payload.active === true)
             // become Observables which cancel any previous
-            .switchMap(typingOnAction =>
+            .switchMap(notifyOnAction =>
                 // and which consist of the first of these to complete
                 Rx.Observable.race(
                     Rx.Observable.timer(2500),
                     action$.ofType('Message.send')
                 )
-                // .. returned as a notifyOfTyping({active: false}) action
+                // .. but turned into a notifyOfTyping({active: false}) action
                 .map(() => ({
                     type: 'Activity.notifyOfTyping',
                     payload: {
                         active: false,
-                        sender: typingOnAction.payload.sender
+                        sender: notifyOnAction.payload.sender
                     }
                 })))
 }
