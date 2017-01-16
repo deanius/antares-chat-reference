@@ -2,7 +2,6 @@ import { fromJS, List as IList } from 'immutable'
 import { createReducer } from 'redux-act'
 import { combineReducers } from 'redux-immutable'
 import Rx from 'rxjs'
-import { createConsequence } from 'meteor/deanius:antares'
 
 export { default as Actions } from './actions'
 

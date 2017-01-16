@@ -14,7 +14,11 @@
         "plugin:meteor/recommended"
     ],
     "settings": {
-        "import/resolver": "meteor"
+        "import/resolver": "meteor",
+        "import/core-modules": [
+            "meteor/meteor",
+            "meteor/deanius:antares"
+        ]
     },
     "rules": {
         "import/no-unresolved": 0,
