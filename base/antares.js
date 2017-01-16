@@ -7,8 +7,8 @@ export const announce = Antares.announce
 
 // Extend our global scope with Antares in client and server agencies
 inAgencyRun('any', function() {
-    Object.assign(this, Antares)
     Object.assign(this, {
-        Actions: AntaresConfig.Actions
+        Antares,
+        Actions
     })
 })
