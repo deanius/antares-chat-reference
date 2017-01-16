@@ -4,7 +4,7 @@
   "scripts": {
     "start": "meteor run --port 3140",
     "doc:all": "npm run doc:gen && npm run doc:view",
-    "doc:gen": "madge -f es6 -i deps.svg lib/ ",
+    "doc:gen": "madge -f es6 -i deps.svg base/ client/ server/",
     "doc:view": "open deps.svg",
     "deploy": "DEPLOY_HOSTNAME=galaxy.meteor.com meteor deploy antares.meteorapp.com --settings config/settings_production.json",
     "lint": "eslint ."
