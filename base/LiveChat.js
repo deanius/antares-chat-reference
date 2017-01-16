@@ -1,9 +1,8 @@
 import React from 'react'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
-// import not working - due to lib in Meteor perhaps? workaround is use global
-// import { store, announce } from './antares'
-import { Actions } from './antares-config'
+import { announce } from './antares'
+import Actions from './actions'
 
 // Given the senderId using this chat, returns a function which
 // updates messages' sentByMe property
@@ -30,7 +29,7 @@ const selectState = (state) => {
 
 // TODO provide all handlers with the sender argument in a DRY way
 const handlers = () => ({
-    sendChat: (message, sender) => { Antares.announce(Actions.Message.send, { message, sender }) }
+    sendChat: (message, sender) => { announce(Actions.Message.send, { message, sender }) }
 })
 
 class _LiveChat extends React.Component {
@@ -53,8 +52,8 @@ class _LiveChat extends React.Component {
         // Tell React of the new value to render in the input
         this.setState({ inProgressMessage: event.target.value })
 
-        // Announce one of these events (locally) on every change 
-        Antares.announce(Actions.Activity.type, { sender: this.props.senderId })
+        // Announce one of these events (locally) on every change
+        announce(Actions.Activity.type, { sender: this.props.senderId })
     }
 
     handleSend() {
@@ -70,9 +69,9 @@ class _LiveChat extends React.Component {
                 <div className="sm">
                     <a
                       href="#start-conversation" onClick={(e) => {
-                          Antares.announce(Actions.Conversation.start, ['Self', 'Other'])
-                          Antares.announce(Actions.Message.send, { message: 'Hello!', sender: 'Self' })
-                          Antares.announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
+                          announce(Actions.Conversation.start, ['Self', 'Other'])
+                          announce(Actions.Message.send, { message: 'Hello!', sender: 'Self' })
+                          announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
                           e.preventDefault()
                       }}
                     >Start conversation</a>
@@ -80,7 +79,8 @@ class _LiveChat extends React.Component {
                     <a
                       href="#change-sides"
                       onClick={(e) => {
-                          Antares.announce(Actions.View.changeSides) && e.preventDefault()
+                          announce(Actions.View.changeSides)
+                          e.preventDefault()
                       }}
                     >See Other&apos;s View</a>
                     &nbsp;
