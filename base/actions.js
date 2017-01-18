@@ -3,6 +3,10 @@ export default {
         start: () => ({
             type: 'Antares.store',
             payload: { senders: ['Self', 'Other'] }
+        }),
+        // An action of interest to our S3Renderer
+        archive: () => ({
+            type: 'Chat.archive.begin'
         })
     },
     Message: {

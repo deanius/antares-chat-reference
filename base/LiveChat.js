@@ -27,9 +27,14 @@ const selectState = (state) => {
         .toJS()
 }
 
-// TODO provide all handlers with the sender argument in a DRY way
-const handlers = () => ({
-    sendChat: (message, sender) => { announce(Actions.Message.send, { message, sender }) }
+// Handlers which will be injected into our components as props
+const getHandlers = () => ({
+    sendChat(message, sender) {
+        announce(Actions.Message.send, { message, sender })
+    },
+    archiveChat() {
+        announce(Actions.Chat.archive)
+    }
 })
 
 class _LiveChat extends React.Component {
@@ -39,6 +44,7 @@ class _LiveChat extends React.Component {
         this.handleTyping = this.handleTyping.bind(this)
         this.handleSend = this.handleSend.bind(this)
         this.handleKeyPress = this.handleKeyPress.bind(this)
+        this.handleArchive = this.handleArchive.bind(this)
     }
 
     handleKeyPress(event) {
@@ -61,6 +67,10 @@ class _LiveChat extends React.Component {
         this.setState({ inProgressMessage: '' })
     }
 
+    handleArchive() {
+        this.props.archiveChat()
+    }
+
     render() {
         let { senderId, messages = [], isTyping } = this.props
         return (
@@ -69,7 +79,7 @@ class _LiveChat extends React.Component {
                 <div className="sm">
                     <a
                       href="#start-conversation" onClick={(e) => {
-                          announce(Actions.Conversation.start)
+                          announce(Actions.Chat.start)
                           announce(Actions.Message.send, { message: 'Hello!', sender: 'Self' })
                           announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
                           e.preventDefault()
@@ -115,10 +125,13 @@ class _LiveChat extends React.Component {
                     <br />
                     <button onClick={this.handleSend}>SEND</button>
                 </div>
+                <div>
+                    <button onClick={this.handleArchive}>Archive</button>
+                </div>
             </div>
         )
     }
 }
 
-export const LiveChat = connect(selectState, handlers)(_LiveChat)
+export const LiveChat = connect(selectState, getHandlers)(_LiveChat)
 
