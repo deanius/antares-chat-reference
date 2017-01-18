@@ -1,7 +1,7 @@
 export default {
     Conversation: {
         start: participants => ({
-            type: 'Antares.storeAtKey',
+            type: 'Antares.store',
             payload: { senders: participants }
         })
     },
