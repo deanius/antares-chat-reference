@@ -9,6 +9,6 @@ export const announce = Antares.announce
 inAgencyRun('any', function() {
     Object.assign(this, {
         Antares,
-        Actions: AntaresConfig
+        Actions: AntaresConfig.Actions
     })
 })

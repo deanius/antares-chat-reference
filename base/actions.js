@@ -1,5 +1,5 @@
 export default {
-    Conversation: {
+    Chat: {
         start: () => ({
             type: 'Antares.store',
             payload: { senders: ['Self', 'Other'] }
