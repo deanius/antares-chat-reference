@@ -16,13 +16,13 @@ const markMyMessages = senderId =>
 // and view data, particular to each client
 const selectState = (state) => {
     const persistedChatData = (state.antares.getIn(['Chats', 'chat:demo']) || new Map())
-    const currentSender = state.view.get('senderId')
+    const currentSender = state.view.get('viewingAs')
     return persistedChatData
         // slightly dirty - modify the messages to have a flag
         .update('messages', markMyMessages(currentSender))
         .merge({
             senderId: currentSender,
-            activeSenders: state.view.getIn(['activity', 'activeSenders'])
+            isTyping: state.view.getIn(['activity', 'isTyping'])
         })
         .toJS()
 }
@@ -62,14 +62,14 @@ class _LiveChat extends React.Component {
     }
 
     render() {
-        let { senderId, messages = [], activeSenders } = this.props
+        let { senderId, messages = [], isTyping } = this.props
         return (
             <div>
                 <h2>ANTARES chat</h2>
                 <div className="sm">
                     <a
                       href="#start-conversation" onClick={(e) => {
-                          announce(Actions.Conversation.start, ['Self', 'Other'])
+                          announce(Actions.Conversation.start)
                           announce(Actions.Message.send, { message: 'Hello!', sender: 'Self' })
                           announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
                           e.preventDefault()
@@ -99,9 +99,9 @@ class _LiveChat extends React.Component {
                 {
                     // a compound expression evaluating to the typing indicator
                     // if all the conditions are met
-                    activeSenders &&
-                    Object.keys(activeSenders).length > 0 &&
-                    !activeSenders[senderId] &&
+                    isTyping &&
+                    Object.keys(isTyping).length > 0 &&
+                    !isTyping[senderId] &&
                     <div className="msg msg-theirs"><i>. . .</i></div>
                 }
 

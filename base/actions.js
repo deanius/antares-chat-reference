@@ -1,8 +1,8 @@
 export default {
     Conversation: {
-        start: participants => ({
+        start: () => ({
             type: 'Antares.store',
-            payload: { senders: participants }
+            payload: { senders: ['Self', 'Other'] }
         })
     },
     Message: {

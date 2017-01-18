@@ -22,22 +22,24 @@ const messageReducer = createReducer({
 const activityReducer = createReducer({
     'Activity.notifyOfTyping': (state, { active, sender }) => {
         if (active) {
-            return state.setIn(['activeSenders', sender], active)
+            return state.setIn(['isTyping', sender], active)
         }
-        return state.deleteIn(['activeSenders', sender])
+        return state.deleteIn(['isTyping', sender])
     }
-}, fromJS({ activeSenders: {} }))
+}, fromJS({ isTyping: {} }))
 
-export const Reducers = {
-    Conversation: combineReducers({
-        senders: sendersReducer,
-        messages: messageReducer,
-    })
-}
+const ChatReducer = combineReducers({
+    senders: sendersReducer,
+    messages: messageReducer,
+})
+
+// A mapping from a given key such as ['Chats', 'chat:demo'], to a reducer to use.
+// Very simple because it's our only object type.
+export const ReducerForKey = () => ChatReducer
 
 export const ViewReducer = combineReducers({
-    senderId: createReducer({
-        'View.changeSides': senderId => (senderId === 'Self' ? 'Other' : 'Self')
+    viewingAs: createReducer({
+        'View.changeSides': viewingAs => (viewingAs === 'Self' ? 'Other' : 'Self')
     }, 'Self'),
     activity: activityReducer
 })
@@ -80,6 +82,3 @@ export const Epics = {
 export const MetaEnhancers = [
     () => ({ key: ['Chats', 'chat:demo'] })
 ]
-
-export const ReducerForKey = () => Reducers.Conversation
-
