@@ -21,7 +21,7 @@ inAgencyRun('any', function() {
 })
 
 const MongoRenderer = ({ mongoDiff }) => {
-    // if (!mongoDiff) return
+    if (!mongoDiff) return
     let { id, collection, update, upsert, updateOp } = mongoDiff
 
     let MongoColl = Collections[collection]
@@ -39,15 +39,27 @@ const MongoRenderer = ({ mongoDiff }) => {
 }
 
 inAgencyRun('server', () => {
-    // Antares.subscribeRenderer(Meteor.bindEnvironment(MongoRenderer), {
-    Antares.subscribeRenderer(MongoRenderer, {
-        mode: 'sync',
+
+    // Subscribe our Mongo Renderer in one of two styles
+
+    // WITH an egregious Mongo delay
+    Antares.subscribeRenderer(Meteor.bindEnvironment(MongoRenderer), {
+        mode: 'async',
         xform: diff$ => diff$
-            // .filter(({ mongoDiff }) => mongoDiff !== null)
+            .filter(({ mongoDiff }) => mongoDiff !== null)
+            .delay(3000)
     })
 
-    Collections.Chats.find().observe({
-        added: doc => console.log('DB (create)>', doc),
-        changed: newDoc => console.log('DB (update)>', newDoc)
+    // ALTERNATELY without optimistic persistence (no bindEnvironment needed)
+    // Antares.subscribeRenderer(MongoRenderer, {
+    //     mode: 'sync',
+    //     xform: diff$ => diff$
+    //         .filter(({ mongoDiff }) => mongoDiff !== null)
+    // })
+
+    // Show us from the DB What actual changes have occurred
+    Collections.Chats.find().observeChanges({
+        added: (id, fields) => console.log(`DB (${id})>`, fields),
+        changed: (id, fields) => console.log(`DB (${id})>`, fields)
     })
 })
