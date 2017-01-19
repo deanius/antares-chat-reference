@@ -1,4 +1,5 @@
 import { AntaresMeteorInit, AntaresInit, inAgencyRun } from 'meteor/deanius:antares'
+import { Meteor } from 'meteor/meteor'
 import { Mongo } from 'meteor/mongo'
 import * as AntaresConfig from './antares-config'
 
@@ -20,6 +21,7 @@ inAgencyRun('any', function() {
 })
 
 const MongoRenderer = ({ mongoDiff }) => {
+    // if (!mongoDiff) return
     let { id, collection, update, upsert, updateOp } = mongoDiff
 
     let MongoColl = Collections[collection]
@@ -37,9 +39,15 @@ const MongoRenderer = ({ mongoDiff }) => {
 }
 
 inAgencyRun('server', () => {
+    // Antares.subscribeRenderer(Meteor.bindEnvironment(MongoRenderer), {
     Antares.subscribeRenderer(MongoRenderer, {
         mode: 'sync',
         xform: diff$ => diff$
-            .filter(({ mongoDiff }) => mongoDiff !== null)
+            // .filter(({ mongoDiff }) => mongoDiff !== null)
+    })
+
+    Collections.Chats.find().observe({
+        added: doc => console.log('DB (create)>', doc),
+        changed: newDoc => console.log('DB (update)>', newDoc)
     })
 })

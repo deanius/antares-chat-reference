@@ -1,6 +1,8 @@
 import Rx from 'rxjs'
+import { isInAgency } from 'meteor/deanius:antares'
 
-export default {
+export default isInAgency('server') ? {} : {
+
     notifyOfTyping: action$ =>
         action$
             .ofType('Activity.type')
@@ -25,12 +27,12 @@ export default {
                     Rx.Observable.timer(2500),
                     action$.ofType('Message.send')
                 )
-                // .. but turned into a notifyOfTyping({active: false}) action
-                .map(() => ({
-                    type: 'Activity.notifyOfTyping',
-                    payload: {
-                        active: false,
-                        sender: notifyOnAction.payload.sender
-                    }
-                })))
+                    // .. but turned into a notifyOfTyping({active: false}) action
+                    .map(() => ({
+                        type: 'Activity.notifyOfTyping',
+                        payload: {
+                            active: false,
+                            sender: notifyOnAction.payload.sender
+                        }
+                    })))
 }
