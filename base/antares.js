@@ -20,26 +20,7 @@ inAgencyRun('any', function() {
     })
 })
 
-const MongoRenderer = ({ mongoDiff }) => {
-    if (!mongoDiff) return
-    let { id, collection, update, upsert, updateOp } = mongoDiff
-
-    let MongoColl = Collections[collection]
-    if (!MongoColl) throw new Error(`Collection ${collection} not found`)
-
-    if (update) {
-        MongoColl.update(
-            { _id: id },
-            updateOp,
-            {
-                upsert
-            }
-        )
-    }
-}
-
 inAgencyRun('server', () => {
-
     // Subscribe our Mongo Renderer in one of two styles
 
     // WITH an egregious Mongo delay
@@ -57,7 +38,7 @@ inAgencyRun('server', () => {
     //         .filter(({ mongoDiff }) => mongoDiff !== null)
     // })
 
-    // Show us from the DB What actual changes have occurred
+    // Bonus: Show us from the DB What actual changes have occurred
     Collections.Chats.find().observeChanges({
         added: (id, fields) => console.log(`DB (${id})>`, fields),
         changed: (id, fields) => console.log(`DB (${id})>`, fields)
