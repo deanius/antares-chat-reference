@@ -1,3 +1,7 @@
+#react-root {
+  max-width: 300px;
+}
+
 /* styles from https://codepen.io/thatdevguy/pen/HbKCf */
 
 .sm {
@@ -12,6 +16,7 @@
 .inProgressMessage { 
   clear: both;
   margin-top: 10px;
+  width: 200px;
 }
 
 .msg {

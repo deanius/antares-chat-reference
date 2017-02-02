@@ -4,19 +4,19 @@ import { connect } from 'react-redux'
 import { announce } from './antares'
 import Actions from './actions'
 
-// Given the senderId using this chat, returns a function which
-// updates messages' sentByMe property
-const markMyMessages = senderId =>
-    messages => messages && messages.map((message) => {
-        return message.set('sentByMe', (message.get('sender') === senderId))
-    })
+// The 4 parts of this file:
+//  1. The definition of mapStateToProps
+//  2. The definition of mapDispatchToProps
+//  3. The component
+//  4. The export of the connect-wrapped component
 
 // Selects the slice of state to be shown in the UI, as a plain JS object
 // The component props combine both antares data (shared for all clients)
 // and view data, particular to each client
-const selectState = (state) => {
+const mapStateToProps = (state) => {
     const persistedChatData = (state.antares.getIn(['Chats', 'chat:demo']) || new Map())
     const currentSender = state.view.get('viewingAs')
+
     return persistedChatData
         // slightly dirty - modify the messages to have a flag
         .update('messages', markMyMessages(currentSender))
@@ -25,10 +25,20 @@ const selectState = (state) => {
             isTyping: state.view.getIn(['activity', 'isTyping'])
         })
         .toJS()
+
+    // Given the senderId using this chat, returns a function which
+    // updates messages' sentByMe property
+    function markMyMessages(senderId) {
+        return messages => messages && messages.map((message) => {
+            return message.set('sentByMe', (message.get('sender') === senderId))
+        })
+    }
+    
 }
 
 // Handlers which will be injected into our components as props
-const getHandlers = () => ({
+// We actually use announce instead of dispatch, however
+const mapDispatchToProps = () => ({
     sendChat(message, sender) {
         announce(Actions.Message.send, { message, sender })
     },
@@ -86,15 +96,14 @@ class _LiveChat extends React.Component {
                       }}
                     >Start conversation</a>
                     &nbsp;
+                    View As: <b>{senderId}</b> &nbsp;|&nbsp; 
                     <a
                       href="#change-sides"
                       onClick={(e) => {
                           announce(Actions.View.changeSides)
                           e.preventDefault()
                       }}
-                    >See Other&apos;s View</a>
-                    &nbsp;
-                    (viewing as {senderId})
+                    >{senderId === 'Self' ? 'Other' : 'Self'}</a>
                 </div>
 
                 <div className="messages">
@@ -102,6 +111,7 @@ class _LiveChat extends React.Component {
                         <div
                           key={Math.floor(Math.random() * 10000)}
                           className={'msg msg-' + (msg.sentByMe ? 'mine' : 'theirs')}
+                          title={msg.sentAt}
                         >{msg.message}</div>
                     ))}
                 </div>
@@ -125,13 +135,14 @@ class _LiveChat extends React.Component {
                     <br />
                     <button onClick={this.handleSend}>SEND</button>
                 </div>
-                <div>
+                {/*<div>
                     <button onClick={this.handleArchive}>Archive</button>
-                </div>
+                </div>*/}
             </div>
         )
     }
 }
 
-export const LiveChat = connect(selectState, getHandlers)(_LiveChat)
+// We actually use announce instead of dispatch, however
+export const LiveChat = connect(mapStateToProps, mapDispatchToProps)(_LiveChat)
 

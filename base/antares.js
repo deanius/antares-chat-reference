@@ -19,20 +19,33 @@ inAgencyRun('any', function() {
         Actions: AntaresConfig.Actions,
         Collections
     })
+
+    // clean slate
+    Antares.announce({
+        type: 'Antares.forget',
+        meta: { antares: { key: ['Chats', 'chat:demo'] } }
+    })
 })
 
 inAgencyRun('server', () => {
     // Subscribe our Mongo Renderer in one of two styles
 
-    // WITH an egregious Mongo delay
+    // WITH a hypothetical Mongo delay
     Antares.subscribeRenderer(mongoRendererFor(Collections), {
         mode: 'async',
         xform: diff$ => diff$
             .filter(({ mongoDiff }) => mongoDiff !== null)
-            .delay(3000)
+            .delay(300)
     })
 
-    // ALTERNATELY without optimistic persistence
+    // DEMO only: simulate network latency
+    Antares.subscribeRenderer(Meteor.bindEnvironment(() => {
+        Promise.await(new Promise(resolve => setTimeout(resolve, 100)))
+    }))
+
+    // ALTERNATELY non-blocking synchronous wait.
+    // Exceptions *will* blow the stack.
+    //
     // Antares.subscribeRenderer(mongoRendererFor(Collections), {
     //     mode: 'sync',
     //     xform: diff$ => diff$
@@ -42,5 +55,7 @@ inAgencyRun('server', () => {
 
 inAgencyRun('client', () => {
     // Nothing happens until we subscribe!
-    Antares.subscribe('*')
+    Antares.subscribe({
+        key: ['Chats'] // ['Chats', 'chat:demo']
+    })
 })
