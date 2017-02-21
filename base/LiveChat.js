@@ -95,15 +95,15 @@ class _LiveChat extends React.Component {
                           e.preventDefault()
                       }}
                     >{senderId === 'Self' ? 'Other' : 'Self'}</a>
-                    &nbsp;
-                    <a
-                      href="#start-conversation" onClick={(e) => {
+                    &nbsp;&nbsp;&nbsp;
+                    <button
+                      onClick={(e) => {
                           announce(Actions.Chat.start)
                           announce(Actions.Message.send, { message: 'Hello!', sender: 'Self' })
                           announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
                           e.preventDefault()
                       }}
-                    >Start/restart conversation</a>
+                    >Start/Restart ⟳</button>
                 </div>
 
                 <div className="messages">
@@ -133,7 +133,7 @@ class _LiveChat extends React.Component {
                       onKeyPress={this.handleKeyPress}
                     />
                     <br />
-                    <button onClick={this.handleSend}>SEND</button>
+                    <button onClick={this.handleSend}>Send ➩</button>
                 </div>
                 {/*<div>
                     <button onClick={this.handleArchive}>Archive</button>
