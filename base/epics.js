@@ -22,17 +22,19 @@ export default isInAgency('server') ? {} : {
             .filter(a => a.payload.active === true)
             // become Observables which cancel any previous
             .switchMap(notifyOnAction =>
-                // and which consist of the first of these to complete
+                // and which consist of the first of these to complete                // .. but turned into a notifyOfTyping({active: false}) action
+                // turned into a notifyOfTyping({active: false}) action
                 Rx.Observable.race(
                     Rx.Observable.timer(2500),
                     action$.ofType('Message.send')
-                )
-                    // .. but turned into a notifyOfTyping({active: false}) action
-                    .map(() => ({
-                        type: 'Activity.notifyOfTyping',
-                        payload: {
-                            active: false,
-                            sender: notifyOnAction.payload.sender
-                        }
-                    })))
+                ).map(() => ({
+                    type: 'Activity.notifyOfTyping',
+                    payload: {
+                        active: false,
+                        sender: notifyOnAction.payload.sender
+                    },
+                    // We dont need to send out these actions - each agent will run this
+                    // epic, clearing its own indicator accordingly.
+                    meta: { antares: { localOnly: true } }
+                })))
 }
