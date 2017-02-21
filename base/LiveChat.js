@@ -87,15 +87,6 @@ class _LiveChat extends React.Component {
             <div>
                 <h2>ANTARES chat</h2>
                 <div className="sm">
-                    <a
-                      href="#start-conversation" onClick={(e) => {
-                          announce(Actions.Chat.start)
-                          announce(Actions.Message.send, { message: 'Hello!', sender: 'Self' })
-                          announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
-                          e.preventDefault()
-                      }}
-                    >Start/restart conversation</a>
-                    &nbsp;
                     View As: <b>{senderId}</b> &nbsp;|&nbsp; 
                     <a
                       href="#change-sides"
@@ -104,6 +95,15 @@ class _LiveChat extends React.Component {
                           e.preventDefault()
                       }}
                     >{senderId === 'Self' ? 'Other' : 'Self'}</a>
+                    &nbsp;
+                    <a
+                      href="#start-conversation" onClick={(e) => {
+                          announce(Actions.Chat.start)
+                          announce(Actions.Message.send, { message: 'Hello!', sender: 'Self' })
+                          announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
+                          e.preventDefault()
+                      }}
+                    >Start/restart conversation</a>
                 </div>
 
                 <div className="messages">
