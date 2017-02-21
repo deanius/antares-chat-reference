@@ -1,12 +1,14 @@
 # Antares Examples
 
+> npm start 
+
+View in browser at http://localhost:3140
+
+Open two browsers. Click 'Start Conversation' in one of them. Toggle the view to 'Other' in one of them.
+Observe messages and typing notifications flying back and forth. Includes some simulated latency, 
+demonstrates the use of Optimistic UI.
+
 ## Developer Notes: 
 
-This app needs a dependency on both the npm and Meteor packages of antares.
-
 There's a symlink to a sibling directory called `antares` to pick up the 
-meteor package. From that directory, run `npm link`, and from this directory
-run `npm link antares`. 
-
-Upon changes to antares npm code, run its tests, then `gulp build`, and the 
-Meteor app will pick up changes.
+meteor package, or the most recent compatible version from [atmosphere](https://atmospherejs.com/deanius/antares) will be used.
