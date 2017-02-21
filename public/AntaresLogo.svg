@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="413px" height="146px" viewBox="0 0 413 146" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>LogoAntaresRadioLogo</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="413" height="146" rx="8"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="413" height="146" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.0801064312">
+        <g id="Logo">
+            <text id="Antares" font-family="TrebuchetMS, Trebuchet MS" font-size="112" font-weight="normal" fill="#000000">
+                <tspan x="21" y="134">Antares</tspan>
+            </text>
+            <g id="Ripples" transform="translate(10.000000, 6.000000)" stroke="#000000" fill="#000000">
+                <g id="Halo">
+                    <path d="M31.7806214,41.7117608 C39.0230376,38.1112781 44,30.636855 44,22 C44,9.8497355 34.1502645,0 22,0 C9.8497355,0 0,9.8497355 0,22 C0,30.636855 4.9769624,38.1112781 12.2193786,41.7117608 L13.9000193,36.9499453 C8.59892328,34.0717041 5,28.4561389 5,22 C5,12.6111593 12.6111593,5 22,5 C31.3888407,5 39,12.6111593 39,22 C39,28.4561389 35.4010767,34.0717041 30.0999807,36.9499453 L31.7806214,41.7117608 Z"></path>
+                </g>
+                <g id="Halo-Wide" transform="translate(19.000000, 18.000000)">
+                    <g id="Halo-Copy">
+                        <path d="M19.7418146,25.4734916 C24.0555677,23.2201109 27,18.70391 27,13.5 C27,6.04415588 20.9558441,0 13.5,0 C6.04415588,0 0,6.04415588 0,13.5 C0,18.7273585 2.97102695,23.2607965 7.31658131,25.5038144 L8.20413626,22.7536161 C5.03667785,20.9387202 2.9000001,17.5047265 2.9000001,13.5672841 C2.9000001,7.73665708 7.58534026,3.00999999 13.3650002,3.00999999 C19.1446602,3.00999999 23.8300004,7.73665708 23.8300004,13.5672841 C23.8300004,17.3859655 21.8202716,20.7311103 18.8096308,22.5850054 L19.7418146,25.4734916 Z" id="Halo"></path>
+                    </g>
+                </g>
+                <g id="BullsEye" transform="translate(33.000000, 32.000000)">
+                    <path d="M19.1759481,21.6491766 C22.1042961,19.4579513 24,15.9590718 24,12.0168067 C24,5.38010763 18.627417,0 12,0 C5.372583,0 0,5.38010763 0,12.0168067 C0,15.9624403 1.89894495,19.4639303 4.83156069,21.6547907 L12.0050125,5.6499939 L19.1759481,21.6491766 Z" id="Halo"></path>
+                </g>
+            </g>
+            <use id="Border" stroke="#000000" mask="url(#mask-2)" stroke-width="2" xlink:href="#path-1"></use>
+        </g>
+    </g>
+</svg>

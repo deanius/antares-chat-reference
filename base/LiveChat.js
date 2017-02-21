@@ -85,7 +85,6 @@ class _LiveChat extends React.Component {
         let { senderId, messages = [], isTyping } = this.props
         return (
             <div>
-                <h2>ANTARES chat</h2>
                 <div className="sm">
                     View As: <b>{senderId}</b> &nbsp;|&nbsp; 
                     <a
@@ -97,13 +96,14 @@ class _LiveChat extends React.Component {
                     >{senderId === 'Self' ? 'Other' : 'Self'}</a>
                     &nbsp;&nbsp;&nbsp;
                     <button
+                      style={{ position: 'relative', top: -1 }}
                       onClick={(e) => {
                           announce(Actions.Chat.start)
                           announce(Actions.Message.send, { message: 'Hello!', sender: 'Self' })
                           announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
                           e.preventDefault()
                       }}
-                    >Start/Restart ⟳</button>
+                    >Start/Restart Chat ⟳</button>
                 </div>
 
                 <div className="messages">
