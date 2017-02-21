@@ -94,7 +94,7 @@ class _LiveChat extends React.Component {
                           announce(Actions.Message.send, { message: 'Sup.', sender: 'Other' })
                           e.preventDefault()
                       }}
-                    >Start conversation</a>
+                    >Start/restart conversation</a>
                     &nbsp;
                     View As: <b>{senderId}</b> &nbsp;|&nbsp; 
                     <a

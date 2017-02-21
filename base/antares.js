@@ -13,17 +13,21 @@ const Collections = {
 }
 
 // Extend our global scope with Antares in client and server agencies
-inAgencyRun('any', function() {
+inAgencyRun('any', function () {
     Object.assign(this, {
         Antares,
         Actions: AntaresConfig.Actions,
         Collections
     })
 
-    // clean slate
-    Antares.announce({
-        type: 'Antares.forget',
-        meta: { antares: { key: ['Chats', 'chat:demo'] } }
+    Antares.startup.then(() => {
+        setTimeout(Meteor.bindEnvironment(() => {
+            // clean slate
+            Antares.announce({
+                type: 'Antares.forget',
+                meta: { antares: { key: ['Chats', 'chat:demo'] } }
+            })
+        }), 1000)
     })
 })
 
