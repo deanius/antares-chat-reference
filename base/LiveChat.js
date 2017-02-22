@@ -74,34 +74,26 @@ class _LiveChat extends React.Component {
     handleSend() {
         let originalMessage = this.state.inProgressMessage
 
-        let sendPromise
-        try {
-            // didnt even pass local validation
-            sendPromise = this.props.sendChat(this.state.inProgressMessage, this.props.senderId)
-            sendPromise.catch((err) => {
-                // tell the reducers to mark this one as bad
-                announce({
-                    type: 'Message.send.error',
-                    payload: err,
-                    meta: {
-                        antares: {
-                            key: ['Chats', 'chat:demo'],
-                            localOnly: true
-                        }
+        let sendPromise = this.props.sendChat(this.state.inProgressMessage, this.props.senderId)
+        sendPromise.catch((err) => {
+            // tell the reducers to mark this one as bad
+            announce({
+                type: 'Message.send.error',
+                payload: err,
+                meta: {
+                    antares: {
+                        key: ['Chats', 'chat:demo'],
+                        localOnly: true
                     }
-                })
-
-                // revert the message if we got a server error
-                this.setState({ inProgressMessage: originalMessage })
+                }
             })
 
-            // clear it if no client error
-            this.setState({ inProgressMessage: '' })
-        } catch (err) {
-            let msg = 'Client-side (preventable) error: ' + err
-            console.error(msg)
-            alert(msg)
-        }
+            // revert the message if we got a server error
+            this.setState({ inProgressMessage: originalMessage })
+        })
+
+        // clear it if no client error
+        this.setState({ inProgressMessage: '' })
     }
 
     handleArchive() {
