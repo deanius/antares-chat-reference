@@ -57,7 +57,6 @@ class _LiveChat extends React.Component {
         this.handleTyping = this.handleTyping.bind(this)
         this.handleSend = this.handleSend.bind(this)
         this.handleKeyPress = this.handleKeyPress.bind(this)
-        this.handleArchive = this.handleArchive.bind(this)
     }
 
     handleKeyPress(event) {
@@ -113,10 +112,6 @@ class _LiveChat extends React.Component {
         this.setState({ inProgressMessage: '' })
     }
 
-    handleArchive() {
-        this.props.archiveChat()
-    }
-
     render() {
         let { currentSender, messages = [], isTyping } = this.props
         return (
@@ -130,7 +125,7 @@ class _LiveChat extends React.Component {
                           e.preventDefault()
                       }}
                     >{currentSender === 'Self' ? 'Other' : 'Self'}</a>
-                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <button
                       style={{ position: 'relative', top: -1 }}
                       onClick={(e) => {
