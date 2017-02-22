@@ -133,8 +133,8 @@ class _LiveChat extends React.Component {
                     >Start/Restart Chat ⟳</button>
                 </div>
                 <div className="instructions">
-                    (Messages with &apos;client error&apos;, or &apos;server error&apos;
-                    will force errors in those locations)
+                    Messages shorter than 2 chars raise a client error.
+                    Messages containing &apos;server error&apos; raise a server error.
                 </div>
 
                 <div className="messages">

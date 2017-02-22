@@ -3,6 +3,7 @@ import { ChatReducer } from './reducers'
 export { default as Actions } from './actions'
 export { ViewReducer } from './reducers'
 export { default as Epics } from './epics'
+export { default as Types } from './types'
 
 // Tag every action as pertaining to an imaginary record in:
 //   The Chats collection, with an id of 'chat:demo'
