@@ -25,8 +25,8 @@ a {
 .bg-fade {
     background-image: url('AntaresLogo.png');
     background-repeat: no-repeat;
-    background-size: cover;
-    background-position: cover cover;
+    background-size: contain;
+    background-position: contain center;
 }
 body{
     font-family: Helvetica, Arial, sans-serif;
