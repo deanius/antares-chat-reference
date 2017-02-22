@@ -33,14 +33,13 @@ const mapStateToProps = (state) => {
             return message.set('sentByMe', (message.get('sender') === senderId))
         })
     }
-    
 }
 
 // Handlers which will be injected into our components as props
 // We actually use announce instead of dispatch, however
 const mapDispatchToProps = () => ({
     sendChat(message, sender) {
-        announce(Actions.Message.send, { message, sender })
+        return announce(Actions.Message.send, { message, sender })
     },
     archiveChat() {
         announce(Actions.Chat.archive)
@@ -73,7 +72,15 @@ class _LiveChat extends React.Component {
     }
 
     handleSend() {
+        let originalMessage = this.state.inProgressMessage
         this.props.sendChat(this.state.inProgressMessage, this.props.senderId)
+            .catch((err) => {
+                // crude notification for demo purposes
+                alert(err)
+                // revert the input field if an error occurred
+                this.setState({ inProgressMessage: originalMessage })
+            })
+        // otherwise optimistically clear it
         this.setState({ inProgressMessage: '' })
     }
 
@@ -86,7 +93,7 @@ class _LiveChat extends React.Component {
         return (
             <div>
                 <div className="sm">
-                    View As: <b>{senderId}</b> &nbsp;|&nbsp; 
+                    View As: <b>{senderId}</b> &nbsp;|&nbsp;
                     <a
                       href="#change-sides"
                       onClick={(e) => {
@@ -104,6 +111,10 @@ class _LiveChat extends React.Component {
                           e.preventDefault()
                       }}
                     >Start/Restart Chat ⟳</button>
+                </div>
+                <div className="instructions">
+                    (Messages with &apos;client error&apos;, or &apos;server error&apos;
+                    will force errors in those locations)
                 </div>
 
                 <div className="messages">

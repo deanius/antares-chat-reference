@@ -1,6 +1,7 @@
 import { fromJS, List as IList } from 'immutable'
 import { createReducer } from 'redux-act'
 import { combineReducers } from 'redux-immutable'
+import { isInAgency } from 'meteor/deanius:antares'
 
 const sendersReducer = createReducer({
     'Senders.changeSides': (state) => {
@@ -13,7 +14,18 @@ const sendersReducer = createReducer({
 }, fromJS(['Self', 'Other']))
 
 const messageReducer = createReducer({
-    'Message.send': (msgs, message) => msgs.push(fromJS(message))
+    'Message.send': (msgs, message) => {
+        if (message.message.match(/.*client error.*/i) &&
+            isInAgency('client')) {
+            throw new Error('User-forced client error')
+        } else if (message.message.match(/.*server error.*/i) &&
+            isInAgency('server')) {
+            throw new Error('User-forced server error')
+        } else if (message.message.match(/.*both error.*/i)) {
+            throw new Error('User-forced error')
+        }
+        return msgs.push(fromJS(message))
+    }
 }, new IList())
 
 const activityReducer = createReducer({
