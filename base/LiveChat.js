@@ -98,7 +98,9 @@ class _LiveChat extends React.Component {
             // clear it if no client error
             this.setState({ inProgressMessage: '' })
         } catch (err) {
-            alert('Could not send message' + err)
+            let msg = 'Client-side (preventable) error: ' + err
+            console.error(msg)
+            alert(msg)
         }
     }
 
@@ -140,7 +142,7 @@ class _LiveChat extends React.Component {
                         <div
                           key={Math.floor(Math.random() * 10000)}
                           className={'msg msg-' + (msg.sentByMe ? 'mine' : 'theirs')}
-                          title={msg.error ? 'Your message was not delivered' : msg.sentAt}
+                          title={msg.error ? 'Your message was not delivered' : 'Sent at: ' + msg.sentAt}
                         >{msg.message}
                         { msg.error && ' ⚠️' }    
     
@@ -167,9 +169,6 @@ class _LiveChat extends React.Component {
                     <br />
                     <button onClick={this.handleSend}>Send ➩</button>
                 </div>
-                {/*<div>
-                    <button onClick={this.handleArchive}>Archive</button>
-                </div>*/}
             </div>
         )
     }
