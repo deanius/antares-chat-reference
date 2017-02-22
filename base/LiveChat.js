@@ -1,7 +1,7 @@
 import React from 'react'
 import { Map } from 'immutable'
 import { connect } from 'react-redux'
-import { announce } from './antares'
+import { announce, originate } from './antares'
 import Actions from './actions'
 
 // The 4 parts of this file:
@@ -12,7 +12,11 @@ import Actions from './actions'
 
 // Selects the slice of state to be shown in the UI, as a plain JS object
 // The component props combine both antares data (shared for all clients)
-// and view data, particular to each client
+// and view data, particular to each client.
+// Shape: 
+//   messages: [{message, sentAt, sentByMe}]
+//   currentSender: String
+//   typingNotification: truthy
 const mapStateToProps = (state) => {
     const persistedChatData = (state.antares.getIn(['Chats', 'chat:demo']) || new Map())
     const currentSender = state.view.get('viewingAs')
@@ -21,25 +25,25 @@ const mapStateToProps = (state) => {
         // slightly dirty - modify the messages to have a flag
         .update('messages', markMyMessages(currentSender))
         .merge({
-            senderId: currentSender,
+            currentSender,
             isTyping: state.view.getIn(['activity', 'isTyping'])
         })
         .toJS()
+}
 
-    // Given the senderId using this chat, returns a function which
-    // updates messages' sentByMe property
-    function markMyMessages(senderId) {
-        return messages => messages && messages.map((message) => {
-            return message.set('sentByMe', (message.get('sender') === senderId))
-        })
-    }
+// Given the currentSender using this chat, returns a function which
+// updates messages' sentByMe property
+function markMyMessages(currentSender) {
+    return messages => messages && messages.map((message) => {
+        return message.set('sentByMe', (message.get('sender') === currentSender))
+    })
 }
 
 // Handlers which will be injected into our components as props
 // We actually use announce instead of dispatch, however
 const mapDispatchToProps = () => ({
-    sendChat(message, sender) {
-        return announce(Actions.Message.send, { message, sender })
+    sendChat(action) {
+        return announce(action)
     },
     archiveChat() {
         announce(Actions.Chat.archive)
@@ -68,13 +72,25 @@ class _LiveChat extends React.Component {
         this.setState({ inProgressMessage: event.target.value })
 
         // Announce one of these events (locally) on every change
-        announce(Actions.Activity.type, { sender: this.props.senderId })
+        announce(Actions.Activity.type, { sender: this.props.currentSender })
     }
 
     handleSend() {
-        let originalMessage = this.state.inProgressMessage
+        let action
+        // Client-side validation will run upon constructing the action,
+        // throwing an exception if it doesn't pass Type checks
+        try {
+            action = originate(Actions.Message.send, {
+                message: this.state.inProgressMessage,
+                sender: this.props.currentSender
+            })
+        } catch (err) {
+            alert(err.message)
+            return
+        }        
 
-        let sendPromise = this.props.sendChat(this.state.inProgressMessage, this.props.senderId)
+        let originalMessage = this.state.inProgressMessage
+        let sendPromise = this.props.sendChat(action)
         sendPromise.catch((err) => {
             // tell the reducers to mark this one as bad
             announce({
@@ -92,7 +108,8 @@ class _LiveChat extends React.Component {
             this.setState({ inProgressMessage: originalMessage })
         })
 
-        // clear it if no client error
+        // If we made it this far - clear the message - it'll be restored
+        // in the event of server error
         this.setState({ inProgressMessage: '' })
     }
 
@@ -101,18 +118,18 @@ class _LiveChat extends React.Component {
     }
 
     render() {
-        let { senderId, messages = [], isTyping } = this.props
+        let { currentSender, messages = [], isTyping } = this.props
         return (
             <div>
                 <div className="sm">
-                    View As: <b>{senderId}</b> &nbsp;|&nbsp;
+                    View As: <b>{currentSender}</b> &nbsp;|&nbsp;
                     <a
                       href="#change-sides"
                       onClick={(e) => {
                           announce(Actions.View.changeSides)
                           e.preventDefault()
                       }}
-                    >{senderId === 'Self' ? 'Other' : 'Self'}</a>
+                    >{currentSender === 'Self' ? 'Other' : 'Self'}</a>
                     &nbsp;&nbsp;&nbsp;
                     <button
                       style={{ position: 'relative', top: -1 }}
@@ -147,7 +164,7 @@ class _LiveChat extends React.Component {
                     // if all the conditions are met
                     isTyping &&
                     Object.keys(isTyping).length > 0 &&
-                    !isTyping[senderId] &&
+                    !isTyping[currentSender] &&
                     <div className="msg msg-theirs"><i>. . .</i></div>
                 }
 

@@ -4,8 +4,7 @@ import { Mongo } from 'meteor/mongo'
 import * as AntaresConfig from './antares-config'
 
 export const Antares = AntaresMeteorInit(AntaresInit)(AntaresConfig)
-export const store = Antares.store
-export const announce = Antares.announce
+export const { store, announce, originate } = Antares
 const mongoRendererFor = Antares.mongoRendererFor
 
 const Collections = {
