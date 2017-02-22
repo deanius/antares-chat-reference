@@ -73,15 +73,33 @@ class _LiveChat extends React.Component {
 
     handleSend() {
         let originalMessage = this.state.inProgressMessage
-        this.props.sendChat(this.state.inProgressMessage, this.props.senderId)
-            .catch((err) => {
-                // crude notification for demo purposes
-                alert(err)
-                // revert the input field if an error occurred
+
+        let sendPromise
+        try {
+            // didnt even pass local validation
+            sendPromise = this.props.sendChat(this.state.inProgressMessage, this.props.senderId)
+            sendPromise.catch((err) => {
+                // tell the reducers to mark this one as bad
+                announce({
+                    type: 'Message.send.error',
+                    payload: err,
+                    meta: {
+                        antares: {
+                            key: ['Chats', 'chat:demo'],
+                            localOnly: true
+                        }
+                    }
+                })
+
+                // revert the message if we got a server error
                 this.setState({ inProgressMessage: originalMessage })
             })
-        // otherwise optimistically clear it
-        this.setState({ inProgressMessage: '' })
+
+            // clear it if no client error
+            this.setState({ inProgressMessage: '' })
+        } catch (err) {
+            alert('Could not send message' + err)
+        }
     }
 
     handleArchive() {
@@ -122,8 +140,11 @@ class _LiveChat extends React.Component {
                         <div
                           key={Math.floor(Math.random() * 10000)}
                           className={'msg msg-' + (msg.sentByMe ? 'mine' : 'theirs')}
-                          title={msg.sentAt}
-                        >{msg.message}</div>
+                          title={msg.error ? 'Your message was not delivered' : msg.sentAt}
+                        >{msg.message}
+                        { msg.error && ' ⚠️' }    
+    
+                        </div>
                     ))}
                 </div>
 

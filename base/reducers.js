@@ -3,6 +3,8 @@ import { createReducer } from 'redux-act'
 import { combineReducers } from 'redux-immutable'
 import { isInAgency } from 'meteor/deanius:antares'
 
+import { Meteor } from 'meteor/meteor'
+
 const sendersReducer = createReducer({
     'Senders.changeSides': (state) => {
         let otherID = state.get('otherID')
@@ -17,14 +19,20 @@ const messageReducer = createReducer({
     'Message.send': (msgs, message) => {
         if (message.message.match(/.*client error.*/i) &&
             isInAgency('client')) {
-            throw new Error('User-forced client error')
+            throw new Meteor.Error('User-forced client error')
         } else if (message.message.match(/.*server error.*/i) &&
             isInAgency('server')) {
-            throw new Error('User-forced server error')
+            throw new Meteor.Error('User-forced server error')
         } else if (message.message.match(/.*both error.*/i)) {
-            throw new Error('User-forced error')
+            throw new Meteor.Error('User-forced error')
         }
         return msgs.push(fromJS(message))
+    },
+    'Message.send.error': (msgs, err) => {
+        let lastMsgIdx = msgs.size - 1
+        return msgs.update(lastMsgIdx, (msg) => {
+            return msg.set('error', err.message)
+        })
     }
 }, new IList())
 
