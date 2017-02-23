@@ -17,15 +17,11 @@ const sendersReducer = createReducer({
 
 const messageReducer = createReducer({
     'Message.send': (msgs, message) => {
-        if (message.message.match(/.*client error.*/i) &&
-            isInAgency('client')) {
-            throw new Meteor.Error('User-forced client error')
-        } else if (message.message.match(/.*server error.*/i) &&
+        if (message.message.match(/.*server error.*/i) &&
             isInAgency('server')) {
             throw new Meteor.Error('User-forced server error')
-        } else if (message.message.match(/.*both error.*/i)) {
-            throw new Meteor.Error('User-forced error')
         }
+        
         return msgs.push(fromJS(message))
     },
     'Message.send.error': (msgs, err) => {

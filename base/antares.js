@@ -43,7 +43,7 @@ inAgencyRun('server', () => {
 
     // DEMO only: simulate network latency
     Antares.subscribeRenderer(Meteor.bindEnvironment(() => {
-        Promise.await(new Promise(resolve => setTimeout(resolve, 400)))
+        Promise.await(new Promise(resolve => setTimeout(resolve, 1000)))
     }))
 
     // ALTERNATELY non-blocking synchronous wait.
